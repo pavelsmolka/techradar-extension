@@ -1,0 +1,26 @@
+{
+  "manifest_version": 2,
+
+  "name": "Techradar Dev Tools",
+  "description": "Developer Tools for TechRadar",
+  "version": "1.0",
+
+  "browser_action": {
+    "default_icon": "tr.png",
+    "default_popup": "popup.html"
+  },
+
+  "background": {
+    "scripts": ["background.js"]
+  },
+
+  "content_scripts": [{
+    "matches": ["*://*.techradar.com/*"],
+    "js": ["content_script.js"]
+  }],
+  "permissions": [
+    "activeTab",
+    "https://ajax.googleapis.com/"
+  ],
+  "web_accessible_resources" : ["/injected.js"]
+}
