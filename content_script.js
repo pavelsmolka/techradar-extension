@@ -18,7 +18,7 @@ window.addEventListener("message", function (event) {
 
   // Is this the message we are expecting? We speciried the same `type` in injected.js
   if (event.data.type && (event.data.type == "FEP")) {
-    
+
     console.log("Content script received: " + event.data.text);
 
     // Propagate the message further - into Background
