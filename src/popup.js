@@ -12,7 +12,7 @@ chrome.runtime.sendMessage({ type: "request" });
 ml.add("popup-data", (msg) => {
     console.log('msg received', msg);
     ReactDOM.render(
-        <Extension fep={msg.data.FEP} analytics={msg.data.analytics} hawk={msg.data.HAWK} />,
+        <Extension fep={msg.data.FEP} analytics={msg.data.analytics} hawk={msg.data.HAWK} dfp={msg.data.dfp} />,
         document.getElementById('data-container')
     );
 });

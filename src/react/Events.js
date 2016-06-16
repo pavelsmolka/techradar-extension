@@ -30,28 +30,46 @@ class Events extends React.Component {
 
         var eventHeader = (
             <tr>
-                <th>Event Type</th>
+                <th>Event</th>
                 <th>Count</th>
                 <th>Revenue</th>
             </tr>
         );
 
+        var totalRevenue = 0;
+
         var events = Object.keys(this.props.events).map((eventType) => {
 
             var count = this.props.events[eventType];
-            var revenue = revenueMap[eventType.toLowerCase()] ? '£' + (revenueMap[eventType.toLowerCase()] * count).toFixed(2) : 'N/A';
+            var revenue = revenueMap[eventType.toLowerCase()]
+                ? <span style={{color: 'darkgreen'}}>{'£' + (revenueMap[eventType.toLowerCase()] * count).toFixed(2)}</span>
+                : <span style={{color: 'lightgrey'}}>N/A</span>;
+
+            if (revenueMap[eventType.toLowerCase()]) {
+                totalRevenue += revenueMap[eventType.toLowerCase()] * count;
+            }
+
+            var color = 'black';
+            if (eventType.includes('missing')) { color = 'darkred'; }
+            if (eventType.includes('Click from')) { color = 'darkgreen'; }
+            // if (eventType.includes('appeared')) { color = 'darkblue'; }
 
             return <tr key={eventType}>
-                <td>{eventType}</td>
+                <td><span style={{color: color}}>{eventType}</span></td>
                 <td>{count}</td>
                 <td>{revenue}</td>
             </tr>
         });
 
-        return <table>
-            <thead>{eventHeader}</thead>
-            <tbody>{events}</tbody>
-        </table>;
+        return (
+            <div>
+                {totalRevenue ? <div>Total Hawk Revenue: {totalRevenue}</div> : null}
+                <table>
+                    <thead>{eventHeader}</thead>
+                    <tbody>{events}</tbody>
+                </table>
+            </div>
+        );
     }
 }
 

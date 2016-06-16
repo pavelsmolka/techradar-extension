@@ -7,8 +7,8 @@ class Analytics extends React.Component {
         var trafficHeader = (
             <tr>
                 <th>Country</th>
-                <th>Page Views</th>
-                <th>Sessions</th>
+                <th>Total</th>
+                <th>Unique</th>
             </tr>
         );
         var traffic = this.props.pageviews.map((pageview) => {

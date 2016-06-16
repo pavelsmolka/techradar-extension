@@ -24,10 +24,20 @@ const refresh = setInterval(() => {
     const parsed = hawks.filter((el) => { return ~el.className.indexOf("parsed"); });
     const empty = parsed.filter((el) => { return el.children.length === 0; });
 
+    const anchors = [];
+
+    hawks.forEach((widget) => {
+      var anchor = document.createElement('a');
+      anchor.name = 'widget-anchor-' + (Math.random() * 10000).toFixed(0);
+      widget.parentNode.insertBefore(anchor, widget);
+      anchors.push(anchor.name);
+    });
+
     all_data.HAWK = {
         widgets: hawks,
         parsed: parsed,
-        empty: empty
+        empty: empty,
+        anchors: anchors
     };
 
     if (hawks.length === parsed.length) {
@@ -40,14 +50,18 @@ const refresh = setInterval(() => {
     }
 }, 5000);
 
+
 window.addEventListener("message", (event) => {
-  if (event.source != window) { return; }
+  if (event.source != window) {
+    return;
+  }
 
   if (event.data.type && (event.data.type == "FEP")) {
     console.log("Content script received: ", event.data.data);
-    all_data.FEP = event.data.data;
+    all_data.FEP = event.data.data.fep;
+    all_data.dfp = event.data.data.dfp;
     all_data.url = document.location.pathname;
-    chrome.runtime.sendMessage({ type: "data", data: all_data, initiator: "FEP"});
+    chrome.runtime.sendMessage({type: "data", data: all_data, initiator: "FEP"});
   }
 }, false);
 

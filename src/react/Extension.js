@@ -5,6 +5,7 @@ import Events from './Events';
 
 import FEP from './FEP'
 import HAWK from './HAWK'
+import DFP from './DFP'
 
 class Extension extends React.Component {
 
@@ -15,7 +16,8 @@ class Extension extends React.Component {
             fep: false,
             hawk: false,
             pageviews: false,
-            affiliates: false
+            affiliates: false,
+            dfp: false
         };
     }
 
@@ -41,7 +43,7 @@ class Extension extends React.Component {
         let hawk = null;
         if (this.props.hawk) {
             hawk = <div>
-                <h1 onClick={this.toggle.bind(this, 'hawk')}>HAWK</h1>
+                <h1 onClick={this.toggle.bind(this, 'hawk')}>Hawk Widgets</h1>
                 { this.state.hawk ? <HAWK hawk={this.props.hawk} /> : null }
             </div>;
         }
@@ -69,7 +71,18 @@ class Extension extends React.Component {
                     : null}
             </div>;
         }
-        
+
+        let dfp = null;
+        if (this.props.dfp) {
+            dfp = <div>
+                <h1 onClick={this.toggle.bind(this, 'dfp')}>Adverts</h1>
+                {this.state.dfp ?
+                    <div>
+                        <DFP ads={this.props.dfp} />
+                    </div>
+                    : null}
+            </div>;
+        }
 
         return (
 			<div>
@@ -77,6 +90,7 @@ class Extension extends React.Component {
                 <section>{hawk}</section>
                 <section>{pageviews}</section>
                 <section>{affiliates}</section>
+                <section>{dfp}</section>
             </div>
 		);
     }
