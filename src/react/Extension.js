@@ -1,5 +1,8 @@
 import React from 'react';
 
+import Analytics from './Analytics';
+import Events from './Events';
+
 class Extension extends React.Component {
 
     constructor(props) {
@@ -8,7 +11,8 @@ class Extension extends React.Component {
         this.state = {
             fep: false,
             hawk: false,
-            analytics: false
+            pageviews: false,
+            affiliates: false
         };
     }
 
@@ -55,22 +59,37 @@ class Extension extends React.Component {
             </div>;
         }
 
-        let analytics = null;
-        if (this.props.analytics) {
-            analytics = <div>
-                <h1 onClick={this.toggle.bind(this, 'analytics')}>Analytics</h1>
-                { this.state.analytics
-                    ? <div>{JSON.stringify(this.props.analytics)}</div>
-                    : null
-                }
+        let pageviews = null;
+        if (this.props.analytics && this.props.analytics.pageviews) {
+            pageviews = <div>
+                <h1 onClick={this.toggle.bind(this, 'pageviews')}>Page Views</h1>
+                {this.state.pageviews ?
+                    <div>
+                        <Analytics pageviews={this.props.analytics.pageviews} />
+                    </div>
+                : null}
             </div>;
         }
+
+        let affiliates = null;
+        if (this.props.analytics && this.props.analytics.events) {
+            affiliates = <div>
+                <h1 onClick={this.toggle.bind(this, 'affiliates')}>Affiliates</h1>
+                {this.state.affiliates ?
+                    <div>
+                        <Events events={this.props.analytics.events} />
+                    </div>
+                    : null}
+            </div>;
+        }
+        
 
         return (
 			<div>
                 <section>{fep}</section>
                 <section>{hawk}</section>
-                <section>{analytics}</section>
+                <section>{pageviews}</section>
+                <section>{affiliates}</section>
             </div>
 		);
     }
