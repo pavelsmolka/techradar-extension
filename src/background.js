@@ -1,4 +1,20 @@
-var fep = null;
+
+class BG {
+
+    construct() {
+        chrome.tabs.onUpdated.addListener(this.checkForValidUrl);
+    }
+
+    checkForValidUrl(tabId, changeInfo, tab) {
+        if (tab.url.indexOf('http://specificsite.com') == 0) {
+            chrome.pageAction.show(tabId);
+        }
+    };
+
+
+}
+
+let fep = null;
 
 // Receive data from the page (content script)
 chrome.runtime.onMessage.addListener(function (data) {
