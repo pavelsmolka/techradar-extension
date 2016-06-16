@@ -8,7 +8,8 @@ module.exports = {
     entry: {
         content_script: path.join(__dirname, 'src/content_script.js'),
         background: path.join(__dirname, 'src/background.js'),
-        popup: path.join(__dirname, 'src/popup.js')
+        popup: path.join(__dirname, 'src/popup.js'),
+        injected: path.join(__dirname, 'src/injected.js')
     },
 
     output: {

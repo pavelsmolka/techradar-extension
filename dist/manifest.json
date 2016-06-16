@@ -6,7 +6,7 @@
   "version": "1.0",
 
   "page_action": {
-    "default_icon": "tr.png",
+    "default_icon": "img/tr.png",
     "default_popup": "popup.html"
   },
 
@@ -20,6 +20,7 @@
   }],
   "permissions": [
     "activeTab",
+    "declarativeContent",
     "https://ajax.googleapis.com/"
   ],
   "web_accessible_resources" : ["/injected.js"]

@@ -42,38 +42,51 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	"use strict";var _createClass = function () {function defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}return function (Constructor, protoProps, staticProps) {if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;};}();function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}var 
-	BG = function () {function BG() {_classCallCheck(this, BG);}_createClass(BG, [{ key: "construct", value: function construct() 
+	"use strict";var _MessageListener = __webpack_require__(1);var _MessageListener2 = _interopRequireDefault(_MessageListener);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}var 
 
-	        {
-	            chrome.tabs.onUpdated.addListener(this.checkForValidUrl);} }, { key: "checkForValidUrl", value: function checkForValidUrl(
+	BG = 
 
+	function BG() {var _this = this;_classCallCheck(this, BG);
+	    this.ml = new _MessageListener2.default();
+	    this.ml.add("data", function (msg) {
+	        console.log("data from frontend", msg);
+	        _this.data = msg.data;
+	        chrome.runtime.sendMessage({ type: "popup-data", data: _this.data });});
 
-	        tabId, changeInfo, tab) {
-	            if (tab.url.indexOf('http://specificsite.com') == 0) {
-	                chrome.pageAction.show(tabId);}} }]);return BG;}();
-
-
-
-
-
-
-	var fep = null;
-
-	// Receive data from the page (content script)
-	chrome.runtime.onMessage.addListener(function (data) {
-	    //console.log('Received data from the page (content script)');
-	    fep = data;});
+	    this.ml.add("request", function (msg) {
+	        console.log("request", msg);
+	        chrome.runtime.sendMessage({ type: "popup-data", data: _this.data });});};
 
 
-	chrome.extension.onConnect.addListener(function (port) {
 
-	    console.log("Connected .....");
-	    port.onMessage.addListener(function (msg) {
-	        //console.log("Message received " + msg);
-	        port.postMessage({ data: fep });});});
+
+	new BG();
+
+
+	chrome.runtime.onInstalled.addListener(function () {
+	    chrome.declarativeContent.onPageChanged.removeRules(undefined, function () {
+	        chrome.declarativeContent.onPageChanged.addRules([{ 
+	            conditions: [new chrome.declarativeContent.PageStateMatcher({ pageUrl: { hostContains: 'techradar.com' } })], 
+	            actions: [new chrome.declarativeContent.ShowPageAction()] }]);});});
+
+/***/ },
+/* 1 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';Object.defineProperty(exports, "__esModule", { value: true });var _createClass = function () {function defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}return function (Constructor, protoProps, staticProps) {if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;};}();var _MessageListener = __webpack_require__(1);var _MessageListener2 = _interopRequireDefault(_MessageListener);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}var 
+
+	MessageListener = function () {function MessageListener() {_classCallCheck(this, MessageListener);}_createClass(MessageListener, [{ key: 'add', value: function add(
+			types, callback, sync) {
+				types = types instanceof Array ? types : [types];
+
+				chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
+					if (~types.indexOf(msg.type)) {
+						callback(msg, sender, sendResponse);
+
+						if (!sync) {
+							return true;}}});} }]);return MessageListener;}();exports.default = MessageListener;
 
 /***/ }
 /******/ ]);

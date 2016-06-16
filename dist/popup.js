@@ -42,32 +42,21 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	"use strict";var port = chrome.extension.connect({ 
-	    name: "Sample Communication" });
+	"use strict";var _MessageListener = __webpack_require__(1);var _MessageListener2 = _interopRequireDefault(_MessageListener);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
 
+	var ml = new _MessageListener2.default();
 
-	// This message initializes the communication and requests the FEP data from Background
-	port.postMessage("Hi BackGround");
+	chrome.runtime.sendMessage({ type: "request" });
 
-	// The listener recieves the data from Background and renders it inside the Popup
-	port.onMessage.addListener(function (msg) {
-
-	    //console.log('Received data from Background.');
-	    //console.log(msg);
-
-	    if (!msg.data) {
-	        console.log('No data received.');
-	        return;}
-
-
+	ml.add("popup-data", function (msg) {
 	    var data_container = document.getElementById('data-container');
 	    dataToHtml(msg.data, data_container);});
 
 
-
 	function dataToHtml(data, data_container) {
+	    console.log(data);
 
 	    for (var ii in data) {
 	        if (data.hasOwnProperty(ii)) {
@@ -105,6 +94,23 @@
 
 	            data_container.insertBefore(dt, null);
 	            data_container.insertBefore(dd, null);}}}
+
+/***/ },
+/* 1 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';Object.defineProperty(exports, "__esModule", { value: true });var _createClass = function () {function defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}return function (Constructor, protoProps, staticProps) {if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;};}();var _MessageListener = __webpack_require__(1);var _MessageListener2 = _interopRequireDefault(_MessageListener);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}var 
+
+	MessageListener = function () {function MessageListener() {_classCallCheck(this, MessageListener);}_createClass(MessageListener, [{ key: 'add', value: function add(
+			types, callback, sync) {
+				types = types instanceof Array ? types : [types];
+
+				chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
+					if (~types.indexOf(msg.type)) {
+						callback(msg, sender, sendResponse);
+
+						if (!sync) {
+							return true;}}});} }]);return MessageListener;}();exports.default = MessageListener;
 
 /***/ }
 /******/ ]);

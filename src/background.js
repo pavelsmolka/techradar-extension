@@ -1,33 +1,29 @@
+import ML from './MessageListener';
 
 class BG {
 
-    construct() {
-        chrome.tabs.onUpdated.addListener(this.checkForValidUrl);
+    constructor() {
+        this.ml = new ML();
+        this.ml.add("data", (msg) => {
+            console.log("data from frontend", msg);
+            this.data = msg.data;
+            chrome.runtime.sendMessage({ type: "popup-data", data: this.data});
+        });
+        this.ml.add("request", (msg) => {
+            console.log("request", msg);
+            chrome.runtime.sendMessage({ type: "popup-data", data: this.data});
+        });
     }
-
-    checkForValidUrl(tabId, changeInfo, tab) {
-        if (tab.url.indexOf('http://specificsite.com') == 0) {
-            chrome.pageAction.show(tabId);
-        }
-    };
-
-
 }
 
-let fep = null;
+new BG();
 
-// Receive data from the page (content script)
-chrome.runtime.onMessage.addListener(function (data) {
-    //console.log('Received data from the page (content script)');
-    fep = data;
-});
 
-chrome.extension.onConnect.addListener(function(port) {
-
-  console.log("Connected .....");
-  port.onMessage.addListener(function(msg) {
-        //console.log("Message received " + msg);
-        port.postMessage({data: fep});
-  });
-
+chrome.runtime.onInstalled.addListener(function() {
+    chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
+        chrome.declarativeContent.onPageChanged.addRules([{
+            conditions: [ new chrome.declarativeContent.PageStateMatcher({ pageUrl: { hostContains: 'techradar.com' } }) ],
+            actions: [ new chrome.declarativeContent.ShowPageAction() ]}
+        ]);
+    });
 });

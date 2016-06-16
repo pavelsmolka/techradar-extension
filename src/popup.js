@@ -1,27 +1,16 @@
-var port = chrome.extension.connect({
-    name: "Sample Communication"
-});
+import ML from './MessageListener';
 
-// This message initializes the communication and requests the FEP data from Background
-port.postMessage("Hi BackGround");
+const ml = new ML();
 
-// The listener recieves the data from Background and renders it inside the Popup
-port.onMessage.addListener(function(msg) {
+chrome.runtime.sendMessage({ type: "request" });
 
-    //console.log('Received data from Background.');
-    //console.log(msg);
-
-    if (!msg.data) {
-        console.log('No data received.');
-        return;
-    }
-
+ml.add("popup-data", (msg) => {
     var data_container = document.getElementById('data-container');
     dataToHtml(msg.data, data_container);
-
 });
 
 function dataToHtml(data, data_container) {
+    console.log(data);
 
     for (var ii in data) {
         if (data.hasOwnProperty(ii)) {
