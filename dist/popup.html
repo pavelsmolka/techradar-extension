@@ -15,12 +15,8 @@
       h1 {
         font-size:16px;
       }
-      #status {
-        /* avoid an excessively wide status text */
-        white-space: pre;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        max-width: 400px;
+      td {
+        border-bottom: 1px solid #ccc;
       }
     </style>
 
@@ -33,9 +29,7 @@
     <script src="popup.js"></script>
   </head>
   <body>
-    <h1>TechRadar - FEP</h1>
-    <div id="status"></div>
-    <dl id="data-container"></dl>
+    <div id="data-container"></div>
   </body>
 </html>
 

@@ -48,16 +48,17 @@
 
 	BG = 
 
-	function BG() {var _this = this;_classCallCheck(this, BG);
+	function BG() {_classCallCheck(this, BG);
 	    this.ml = new _MessageListener2.default();
 	    this.ml.add("data", function (msg) {
 	        console.log("data from frontend", msg);
-	        _this.data = msg.data;
-	        chrome.runtime.sendMessage({ type: "popup-data", data: _this.data });});
+	        chrome.runtime.sendMessage({ type: "popup-data", data: msg.data });});
 
 	    this.ml.add("request", function (msg) {
-	        console.log("request", msg);
-	        chrome.runtime.sendMessage({ type: "popup-data", data: _this.data });});};
+	        console.log("request");
+	        chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+	            chrome.tabs.sendMessage(tabs[0].id, { type: "fe-request" });});});};
+
 
 
 

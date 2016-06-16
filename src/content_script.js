@@ -1,3 +1,7 @@
+import ML from './MessageListener';
+
+const ml = new ML();
+
 let all_data = {};
 
 function injectScript(file, node) {
@@ -7,6 +11,10 @@ function injectScript(file, node) {
   th.appendChild(s);
 }
 
+ml.add("fe-request", () => {
+    console.log("request")
+    chrome.runtime.sendMessage({ type: "data", data: all_data});
+})
 
 window.addEventListener("message", (event) => {
   if (event.source != window) { return; }
