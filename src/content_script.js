@@ -14,7 +14,21 @@ function injectScript(file, node) {
 ml.add("fe-request", () => {
     console.log("request")
     chrome.runtime.sendMessage({ type: "data", data: all_data});
-})
+});
+
+const refresh = setInterval(() => {
+    const hawks = Array.prototype.slice.call(document.querySelectorAll(".hawk-widget-insert"));
+    const parsed = hawks.filter((el) => {
+        console.log(el);
+        return el;
+    });
+
+    if (hawks.length === parsed.length) {
+        clearInterval(refresh);
+    }
+    
+    console.log(hawks.length, parsed.length);
+}, 2000);
 
 window.addEventListener("message", (event) => {
   if (event.source != window) { return; }

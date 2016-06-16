@@ -51,24 +51,38 @@
 	var all_data = {};
 
 	function injectScript(file, node) {
-	  var th = document.getElementsByTagName(node)[0];
-	  var s = document.createElement('script');
-	  s.setAttribute('src', file);
-	  th.appendChild(s);}
+	    var th = document.getElementsByTagName(node)[0];
+	    var s = document.createElement('script');
+	    s.setAttribute('src', file);
+	    th.appendChild(s);}
 
 
 	ml.add("fe-request", function () {
-	  console.log("request");
-	  chrome.runtime.sendMessage({ type: "data", data: all_data });});
+	    console.log("request");
+	    chrome.runtime.sendMessage({ type: "data", data: all_data });});
 
+
+	var refresh = setInterval(function () {
+	    var hawks = Array.prototype.slice.call(document.querySelectorAll(".hawk-widget-insert"));
+	    var parsed = hawks.filter(function (el) {
+	        console.log(el);
+	        return el;});
+
+
+	    if (hawks.length === parsed.length) {
+	        clearInterval(refresh);}
+
+
+	    console.log(hawks.length, parsed.length);}, 
+	2000);
 
 	window.addEventListener("message", function (event) {
-	  if (event.source != window) {return;}
+	    if (event.source != window) {return;}
 
-	  if (event.data.type && event.data.type == "FEP") {
-	    console.log("Content script received: ", event.data.data);
-	    all_data.FEP = event.data.data;
-	    chrome.runtime.sendMessage({ type: "data", data: all_data });}}, 
+	    if (event.data.type && event.data.type == "FEP") {
+	        console.log("Content script received: ", event.data.data);
+	        all_data.FEP = event.data.data;
+	        chrome.runtime.sendMessage({ type: "data", data: all_data });}}, 
 
 	false);
 
