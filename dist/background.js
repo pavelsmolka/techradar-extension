@@ -59,10 +59,10 @@
 	            (0, _Ajax2.default)(api).then(function (data) {
 	                msg.data.analytics = JSON.parse(data);
 	                console.log('sending analytics', msg.data);
-	                chrome.runtime.sendMessage({ type: "popup-data", data: msg.data });});}
+	                chrome.runtime.sendMessage({ type: "popup-data", data: msg.data, initiator: "Analytics" });});}
 
 
-	        chrome.runtime.sendMessage({ type: "popup-data", data: msg.data });});
+	        chrome.runtime.sendMessage({ type: "popup-data", data: msg.data, initiator: msg.initiator });});
 
 	    this.ml.add("request", function (msg) {
 	        console.log("request");

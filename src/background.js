@@ -12,10 +12,10 @@ class BG {
                 Ajax(api).then((data) => {
                     msg.data.analytics = JSON.parse(data);
                     console.log('sending analytics', msg.data);
-                    chrome.runtime.sendMessage({ type: "popup-data", data: msg.data});
+                    chrome.runtime.sendMessage({ type: "popup-data", data: msg.data, initiator: "Analytics"});
                 });
             }
-            chrome.runtime.sendMessage({ type: "popup-data", data: msg.data});
+            chrome.runtime.sendMessage({ type: "popup-data", data: msg.data, initiator: msg.initiator});
         });
         this.ml.add("request", (msg) => {
             console.log("request");
