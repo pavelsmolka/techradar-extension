@@ -5,7 +5,11 @@ class Extension extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = { fep: false, hawk: false };
+        this.state = {
+            fep: false,
+            hawk: false,
+            analytics: false
+        };
     }
 
     toggle(prop) {
@@ -51,10 +55,22 @@ class Extension extends React.Component {
             </div>;
         }
 
+        let analytics = null;
+        if (this.props.analytics) {
+            analytics = <div>
+                <h1 onClick={this.toggle.bind(this, 'analytics')}>Analytics</h1>
+                { this.state.analytics
+                    ? <div>{JSON.stringify(this.props.analytics)}</div>
+                    : null
+                }
+            </div>;
+        }
+
         return (
 			<div>
                 <section>{fep}</section>
                 <section>{hawk}</section>
+                <section>{analytics}</section>
             </div>
 		);
     }

@@ -10,7 +10,11 @@ const ml = new ML();
 chrome.runtime.sendMessage({ type: "request" });
 
 ml.add("popup-data", (msg) => {
-    ReactDOM.render(<Extension fep={msg.data.FEP} />, document.getElementById('data-container'));
+    console.log('msg received', msg);
+    ReactDOM.render(
+        <Extension fep={msg.data.FEP} analytics={msg.data.analytics} />, 
+        document.getElementById('data-container')
+    );
 });
 
 function dataToHtml(data, data_container) {

@@ -22,6 +22,7 @@ window.addEventListener("message", (event) => {
   if (event.data.type && (event.data.type == "FEP")) {
     console.log("Content script received: ", event.data.data);
     all_data.FEP = event.data.data;
+    all_data.url = document.location.pathname;
     chrome.runtime.sendMessage({ type: "data", data: all_data});
   }
 }, false);
