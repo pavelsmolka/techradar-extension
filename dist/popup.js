@@ -56,7 +56,52 @@
 	chrome.runtime.sendMessage({ type: "request" });
 
 	ml.add("popup-data", function (msg) {
-	    _reactDom2.default.render(_react2.default.createElement(_Extension2.default, { fep: msg.data.FEP }), document.getElementById('data-container'));});
+	    console.log('msg received', msg);
+	    _reactDom2.default.render(
+	    _react2.default.createElement(_Extension2.default, { fep: msg.data.FEP, analytics: msg.data.analytics }), 
+	    document.getElementById('data-container'));});
+
+
+
+	function dataToHtml(data, data_container) {
+	    console.log(data);
+
+	    for (var ii in data) {
+	        if (data.hasOwnProperty(ii)) {
+
+	            var dt = document.createElement('dt');
+	            var dd = document.createElement('dd');
+
+	            dt.innerHTML = ii;
+
+	            var value_input = data[ii];
+	            var value_node;
+
+	            if (value_input instanceof Array) {
+
+	                value_node = document.createElement('ul');
+	                // TODO use reduce?
+	                value_input.forEach(function (array_item) {
+	                    var li = document.createElement('li');
+	                    li.innerHTML = array_item;
+	                    value_node.insertBefore(li, null);});} else 
+
+
+	            if (value_input instanceof Object) {
+
+	                value_node = document.createElement('div');
+	                var value_as_json = dataToHtml(data[ii], value_node);} else 
+
+	            {
+
+	                value_node = document.createTextNode(value_input);}
+
+
+
+	            dd.insertBefore(value_node, null);
+
+	            data_container.insertBefore(dt, null);
+	            data_container.insertBefore(dd, null);}}}
 
 /***/ },
 /* 1 */
@@ -20379,7 +20424,11 @@
 	    function Extension(props) {_classCallCheck(this, Extension);var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Extension).call(this, 
 	        props));
 
-	        _this.state = { fep: false, hawk: false };return _this;}_createClass(Extension, [{ key: 'toggle', value: function toggle(
+	        _this.state = { 
+	            fep: false, 
+	            hawk: false, 
+	            analytics: false };return _this;}_createClass(Extension, [{ key: 'toggle', value: function toggle(
+
 
 
 	        prop) {
@@ -20425,10 +20474,22 @@
 
 
 
+	            var analytics = null;
+	            if (this.props.analytics) {
+	                analytics = _react2.default.createElement('div', null, 
+	                _react2.default.createElement('h1', { onClick: this.toggle.bind(this, 'analytics') }, 'Analytics'), 
+	                this.state.analytics ? 
+	                _react2.default.createElement('div', null, JSON.stringify(this.props.analytics)) : 
+	                null);}
+
+
+
+
 	            return (
 	                _react2.default.createElement('div', null, 
 	                _react2.default.createElement('section', null, fep), 
-	                _react2.default.createElement('section', null, hawk)));} }]);return Extension;}(_react2.default.Component);exports.default = 
+	                _react2.default.createElement('section', null, hawk), 
+	                _react2.default.createElement('section', null, analytics)));} }]);return Extension;}(_react2.default.Component);exports.default = 
 
 
 
