@@ -63,7 +63,7 @@ class Extension extends React.Component {
         let affiliates = null;
         if (this.props.analytics && this.props.analytics.events) {
             affiliates = <div>
-                <h1 onClick={this.toggle.bind(this, 'affiliates')}>Affiliates</h1>
+                <h1 onClick={this.toggle.bind(this, 'affiliates')}>Affiliates (last 3 days)</h1>
                 {this.state.affiliates ?
                     <div>
                         <Events events={this.props.analytics.events} />

@@ -74,7 +74,7 @@ window.addEventListener("message", (event) => {
         all_data.dfp = event.data.data.dfp;
     }
 
-    all_data.url = document.location.pathname;
+    all_data.location = document.location;
     chrome.runtime.sendMessage({type: "data", data: all_data, initiator: "FEP"});
 }, false);
 
