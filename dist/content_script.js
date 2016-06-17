@@ -62,19 +62,39 @@
 	    chrome.runtime.sendMessage({ type: "data", data: all_data, initiator: "request" });});
 
 
+	ml.add("anchor", function (msg) {
+	    console.log(msg);
+	    location.hash = "#" + msg.anchor;});
+
+
 	var old_parsed = [];
 
 	// needs a better one than 5 seconds
 	var refresh = setInterval(function () {
+
+	    function widget_mapper(widget, index) {
+
+	        var anchor = document.createElement('a');
+	        anchor.name = 'widget-anchor-' + index;
+	        widget.parentNode.insertBefore(anchor, widget);
+
+	        return { 
+	            anchor: anchor.name, 
+	            parsed: !! ~widget.className.indexOf("parsed"), 
+	            empty: widget.children.length === 0, 
+	            name: widget.dataset.name, 
+	            product: widget.dataset.trdProductId, 
+	            widgetType: widget.dataset.widgetType };}
+
+
+
 	    var hawks = Array.prototype.slice.call(document.querySelectorAll(".hawk-widget-insert"));
-	    var parsed = hawks.filter(function (el) {return ~el.className.indexOf("parsed");});
-	    var empty = parsed.filter(function (el) {return el.children.length === 0;});
 
 	    all_data.HAWK = { 
-	        widgets: hawks, 
-	        parsed: parsed, 
-	        empty: empty };
+	        widgets: hawks.map(widget_mapper) };
 
+
+	    var parsed = all_data.HAWK.widgets.filter(function (w) {return w.parsed;});
 
 	    if (hawks.length === parsed.length) {
 	        clearInterval(refresh);}
@@ -86,15 +106,22 @@
 
 	5000);
 
+
 	window.addEventListener("message", function (event) {
-	    if (event.source != window) {return;}
+	    if (event.source != window) {
+	        return;}
+
 
 	    if (event.data.type && event.data.type == "FEP") {
-	        console.log("Content script received: ", event.data.data);
-	        all_data.FEP = event.data.data;
-	        all_data.url = document.location.pathname;
-	        chrome.runtime.sendMessage({ type: "data", data: all_data, initiator: "FEP" });}}, 
+	        all_data.FEP = event.data.data.fep;}
 
+
+	    if (event.data.type && event.data.type == "DFP") {
+	        all_data.dfp = event.data.data.dfp;}
+
+
+	    all_data.url = document.location.pathname;
+	    chrome.runtime.sendMessage({ type: "data", data: all_data, initiator: "FEP" });}, 
 	false);
 
 	injectScript(chrome.extension.getURL('/injected.js'), 'body');

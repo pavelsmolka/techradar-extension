@@ -44,7 +44,37 @@
 /* 0 */
 /***/ function(module, exports) {
 
-	"use strict";window.postMessage({ type: "FEP", data: window.FEP }, "*");
+	"use strict";var dfp = null;
+
+	var dfpInterval = setInterval(function () {
+
+	    dfp = window.dfp && window.dfp.getAdverts().map(function (_ref) {var creativeId = _ref.creativeId;var isEmpty = _ref.isEmpty;var lineItemId = _ref.lineItemId;var size = _ref.size;
+	        return { 
+	            creativeId: creativeId, isEmpty: isEmpty, lineItemId: lineItemId, size: size };});
+
+
+
+	    if (dfp && dfp.length === 0) {
+	        dfp = null;}
+
+
+	    if (dfp) {
+	        window.postMessage({ 
+	            type: "DFP", data: { 
+	                dfp: dfp } }, 
+
+	        "*");
+
+	        clearInterval(dfpInterval);}}, 
+
+
+	2000);
+
+	window.postMessage({ 
+	    type: "FEP", data: { 
+	        fep: window.FEP } }, 
+
+	"*");
 
 /***/ }
 /******/ ]);

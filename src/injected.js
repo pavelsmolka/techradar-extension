@@ -1,6 +1,8 @@
-const fepAndDfpInterval = setInterval(() => {
+let dfp = null;
 
-    var dfp = window.dfp && window.dfp.getAdverts().map(({creativeId, isEmpty, lineItemId, size}) => {
+const dfpInterval = setInterval(() => {
+
+    dfp = window.dfp && window.dfp.getAdverts().map(({creativeId, isEmpty, lineItemId, size}) => {
         return {
             creativeId, isEmpty, lineItemId, size
         };
@@ -10,15 +12,20 @@ const fepAndDfpInterval = setInterval(() => {
         dfp = null;
     }
 
-    window.postMessage({
-        type: "FEP", data: {
-            fep: window.FEP,
-            dfp: dfp
-        }
-    }, "*");
-
     if (dfp) {
-        clearInterval(fepAndDfpInterval);
+        window.postMessage({
+            type: "DFP", data: {
+                dfp: dfp
+            }
+        }, "*");
+
+        clearInterval(dfpInterval);
     }
 
 }, 2000);
+
+window.postMessage({
+    type: "FEP", data: {
+        fep: window.FEP,
+    }
+}, "*");

@@ -16,29 +16,39 @@ ml.add("fe-request", () => {
     chrome.runtime.sendMessage({ type: "data", data: all_data, initiator: "request"});
 });
 
+ml.add("anchor", (msg) => {
+    console.log(msg);
+    location.hash = "#" + msg.anchor;
+});
+
 let old_parsed = [];
 
 // needs a better one than 5 seconds
 const refresh = setInterval(() => {
+
+    function widget_mapper(widget, index) {
+
+        var anchor = document.createElement('a');
+        anchor.name = 'widget-anchor-' + index;
+        widget.parentNode.insertBefore(anchor, widget);
+
+        return {
+            anchor : anchor.name,
+            parsed : !!~widget.className.indexOf("parsed"),
+            empty : widget.children.length === 0,
+            name : widget.dataset.name,
+            product : widget.dataset.trdProductId,
+            widgetType : widget.dataset.widgetType
+        };
+    }
+
     const hawks = Array.prototype.slice.call(document.querySelectorAll(".hawk-widget-insert"));
-    const parsed = hawks.filter((el) => { return ~el.className.indexOf("parsed"); });
-    const empty = parsed.filter((el) => { return el.children.length === 0; });
-
-    const anchors = [];
-
-    hawks.forEach((widget) => {
-      var anchor = document.createElement('a');
-      anchor.name = 'widget-anchor-' + (Math.random() * 10000).toFixed(0);
-      widget.parentNode.insertBefore(anchor, widget);
-      anchors.push(anchor.name);
-    });
 
     all_data.HAWK = {
-        widgets: hawks,
-        parsed: parsed,
-        empty: empty,
-        anchors: anchors
+        widgets: hawks.map(widget_mapper),
     };
+
+    let parsed = all_data.HAWK.widgets.filter(w => w.parsed);
 
     if (hawks.length === parsed.length) {
         clearInterval(refresh);
@@ -57,12 +67,15 @@ window.addEventListener("message", (event) => {
   }
 
   if (event.data.type && (event.data.type == "FEP")) {
-    console.log("Content script received: ", event.data.data);
-    all_data.FEP = event.data.data.fep;
-    all_data.dfp = event.data.data.dfp;
+      all_data.FEP = event.data.data.fep;
+  }
+
+    if (event.data.type && (event.data.type == "DFP")) {
+        all_data.dfp = event.data.data.dfp;
+    }
+
     all_data.url = document.location.pathname;
     chrome.runtime.sendMessage({type: "data", data: all_data, initiator: "FEP"});
-  }
 }, false);
 
 injectScript(chrome.extension.getURL('/injected.js'), 'body');

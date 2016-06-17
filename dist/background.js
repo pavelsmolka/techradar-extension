@@ -55,7 +55,7 @@
 	    this.ml.add("data", function (msg) {
 	        console.log("data from frontend", msg);
 	        if (msg.data.url) {
-	            var api = 'http://stage.search-api.fie.future.net.uk/gapi.php?site=TRD&url=' + msg.data.url;
+	            var api = 'http://stage.search-api.fie.future.net.uk/gapi.php?site=TRD&days=1&url=' + msg.data.url;
 	            (0, _Ajax2.default)(api).then(function (data) {
 	                msg.data.analytics = JSON.parse(data);
 	                console.log('sending analytics', msg.data);
